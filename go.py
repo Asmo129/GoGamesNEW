@@ -1,7 +1,10 @@
+
+#The verification of suicide and the count of the point (not for the kill point) is missing but the game is completed
+#LIST, VARIABLE AND IMPORT
 from listego import *
 import time
 import random
-list_stone_to_kill=[]#verification
+list_stone_to_kill=[]#list for verification
 list_stone_to_survive_E=[]
 list_stone_to_survive_O=[]
 list_stone_to_survive_S=[]
@@ -13,10 +16,11 @@ clockwhite=500
 BcooXY=(0,0)#KO
 WcooXY=(0,0)
 compteurpass=0#Pass
-
+######################################################
+#FUNCTION
 def returncolor (color):#function to transform the lettre in the stone for the goban
     if color=='b':
-        return '⚈'
+        return '⚈'#Your computer will maybe make an caracter error due of this, so you can change
     elif color=='w':
         return 'o'
     else:
@@ -80,7 +84,7 @@ def NESO_stone (cooXY):#function to change the original coordone
     stoneO=cooXTomodifie-1,cooYTomodifie
     return stoneN,stoneO,stoneE,stoneS
 
-def counterkill(list):
+def counterkill(list):#function to count the kill in the game
     if len(list)<=0:
         pass
     else:
@@ -224,42 +228,42 @@ def save_stone_list ():#function to save the coordone of your game
     fichier.write(str(list_stone)+'\nBlack Kills: '+str(killBlack)+'\nWhite Kills: '+str(killWhite))
     fichier.close()
 
-
+######################################################
+#THE GAME
 while True:#The game
     goban_with_stone()#Black Turn
 
-    print ("It's Black turn\n",'\nYou have',clockblack,'secondes\nAnd',killBlack,'kill')
+    print ("It's Black turn\n",'\nYou have',clockblack,'secondes\nAnd',killBlack,'kill')#The turn and statistic
     startblack=time.perf_counter()
 
     oldBcooXY=BcooXY
     BcooXY=input('Coordonnées:')
-    if BcooXY=='pass':
+    if BcooXY=='pass':#if the player pass
         compteurpass+=1
         pass
     else:
-        BcooXY=tuple(int(x) for x in BcooXY.split(","))
+        BcooXY=tuple(int(x) for x in BcooXY.split(","))#The input
         while BcooXY==oldBcooXY:
-            print("It's a Ko!, choose an another stone to play")        
+            print("It's a Ko!, choose an another stone to play")#verifi if it's a ko     
             BcooXY=input('Coordonnées:')
             BcooXY=tuple(int(x) for x in BcooXY.split(","))
-        add_stone_list('b',BcooXY)
+        add_stone_list('b',BcooXY)#To add the stone in the list
 
-        endblack =time.perf_counter()
-        clockblack-=endblack-startblack#the clock
-
-        if clockblack<=0:
+        endblack =time.perf_counter()#the clock
+        clockblack-=round(endblack-startblack,0)
+        if clockblack<=0:#if the clock is out
             print("You are out in time, You lost")
             break
 
-        find_to_kill('b',BcooXY)
+        find_to_kill('b',BcooXY)#To verify the other stone around and see if we kill
         find_other('b',BcooXY)
 
-    if compteurpass>=2:
+    if compteurpass>=2:#To finish the game
         print('The game is over, there is your game and your point')
         save_stone_list()
         break
 
-    goban_with_stone()#White Turn
+    goban_with_stone()#White Turn it's the same than the black turn but for white
     print ("It's White turn\n",'\nYou have',clockwhite,'secondes\nAnd',killWhite,'kill')
     startwhite=time.perf_counter()
 
@@ -277,7 +281,7 @@ while True:#The game
         add_stone_list('w',WcooXY)
 
         endwhite =time.perf_counter()
-        clockwhite-=endwhite-startwhite#the clock
+        clockwhite-=round(endwhite-startwhite,0)#the clock
 
         if clockwhite<=0:
             print("You are out in time, You lost")
